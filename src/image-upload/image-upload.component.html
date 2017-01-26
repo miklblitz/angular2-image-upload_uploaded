@@ -1,0 +1,35 @@
+<div class="image-upload"
+     fileDrop
+     [accept]="['image/*']"
+     (isFileOver)="fileOver($event)"
+     (fileDrop)="fileChange($event)"
+     [ngClass]="{'file-is-over': isFileOver}"
+>
+  <div class="file-upload hr-inline-group">
+    <label class="upload-button">
+      <span>{{buttonMessage}}</span>
+      <input
+        type="file"
+        accept="image/*"
+        multiple (change)="fileChange(input.files)"
+        #input>
+    </label>
+
+    <div class="drag-box-message">{{dragBoxMessage}}</div>
+  </div>
+
+  <div class="image-container hr-inline-group">
+    <div
+      class="image"
+      *ngFor="let file of files"
+      [ngStyle]="{'background-image': 'url('+ file.src +')'}"
+    >
+      <div *ngIf="file.pending" class="loading-overlay">
+        <div class="spinningCircle"></div>
+      </div>
+      <div *ngIf="!file.pending" class="x-mark" (click)="deleteFile(file)">
+        <span class="close"></span>
+      </div>
+    </div>
+  </div>
+</div>

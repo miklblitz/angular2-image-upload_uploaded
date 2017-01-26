@@ -1,0 +1,42 @@
+{
+  "name": "angular2-image-upload",
+  "version": "0.3.2",
+  "description": "An angular component that uploads images using native browser upload or drag-n-drop.",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf lib && tsc -p src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aberezkin/ng2-image-upload"
+  },
+  "keywords": [
+    "image",
+    "upload",
+    "angular",
+    "ng",
+    "image",
+    "preview",
+    "file",
+    "upload",
+    "drag",
+    "drop",
+    "drag&drop"
+  ],
+  "author": "Arkadii Berezkin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aberezkin/image-upload/issues"
+  },
+  "homepage": "https://github.com/aberezkin/image-upload#readme",
+  "dependencies": {
+    "@angular/common": "^2.4.1",
+    "@angular/core": "^2.4.1",
+    "rxjs": "^5.0.2",
+    "zone.js": "^0.7.4"
+  },
+  "devDependencies": {
+    "@types/core-js": "^0.9.35"
+  }
+}
