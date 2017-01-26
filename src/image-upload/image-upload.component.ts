@@ -253,6 +253,8 @@ export class ImageUploadComponent {
     this.imageService.setUrl(this.url);
     
     // сбор загруженных фото в массив
+    if(typeof this.uploaded !== 'undefined')
+    if(this.uploaded.length > 0)
     for(var i=0; i<this.uploaded.length;i++) {
       this.imageService.convertFileToDataURLviaFileReader(this.uploaded[i], this.headers).subscribe(
         response => {
