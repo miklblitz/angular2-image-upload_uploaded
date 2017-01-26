@@ -78,6 +78,7 @@ In the final state it should look something like this:
 
 #### Extended variant
 Добавлен расширяющий функционал, который показывает загруженные фото, их нужно передавать в параметре uploaded, который является массивом строк url. Например
+
 <image-upload
     [max]="100"
     [url]="'example.com/images/upload'"
@@ -94,11 +95,14 @@ In the final state it should look something like this:
 
 ,соответственно в модуле можно просто сформировать массив урлов:
 
-uploaded: Array<string> = ['http://.../assets/goods/kater-2780f0fb4f07da2513f2b739272905d711b57500b39ae00c48d250dbdca5ef38.jpg',
-            'http://.../assets/goods/ya.png',
-            'http://.../assets/goods/yacht-d0cd122194000d071e7a8ada09baa5a13a9e0a78493cf4bac49b3333bc08f7f3.jpg'];
+uploaded: Array<string> = [
+    'http://.../assets/goods/kater-2780f0fb4f07da2513f2b739272905d711b57500b39ae00c48d250dbdca5ef38.jpg',
+    'http://.../assets/goods/ya.png',
+    'http://.../assets/goods/yacht-d0cd122194000d071e7a8ada09baa5a13a9e0a78493cf4bac49b3333bc08f7f3.jpg'
+    ];
 
 а в внутри кнопки добавить эту переменную, вот так:
+
 <image-upload
     [max]="100"
     [url]="'example.com/images/upload'"
