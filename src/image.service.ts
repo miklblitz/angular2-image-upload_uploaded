@@ -45,14 +45,14 @@ export class ImageService {
   }
 
   // для получения base64 + добавление к оригинальному сервису
-  public convertFileToDataURLviaFileReader(url, headers?: Header[]) {
+  public convertFileToDataURLviaFileReader(url, id?: number, headers?: Header[]) {
      return Observable.create(observer => {
         var xhr = new XMLHttpRequest();
         xhr.responseType = 'blob';
         xhr.onreadystatechange = () => {
           var reader = new FileReader();
           reader.onloadend = () => {
-            observer.next(reader.result);
+            observer.next({'image':reader.result, id: id});
             observer.complete();
           }
           reader.readAsDataURL(xhr.response);

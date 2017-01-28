@@ -4,7 +4,7 @@ import {ImageService, Header} from "../image.service";
 class FileHolder {
   public serverResponse: any;
   public pending: boolean = false;
-  constructor(private src: string, public file: File) { }
+  constructor(private src: string, public file: File, public id?: number) { }
 }
 
 @Component({
@@ -39,7 +39,7 @@ class FileHolder {
       <div *ngIf="file.pending" class="loading-overlay">
         <div class="spinningCircle"></div>
       </div>
-      <div *ngIf="!file.pending" class="x-mark" (click)="deleteFile(file)">
+      <div *ngIf="!file.pending&&file.id" class="x-mark" (click)="deleteFile(file)">
         <span class="close"></span>
       </div>
     </div>
@@ -222,7 +222,8 @@ label.upload-button input[type=file] {
 })
 export class ImageUploadComponent {
 
-  @Input() uploaded: Array<string>; // массив url фото, добавлено мной
+  @Input() uploaded: Array<Object>; // массив url фото, добавлено мной
+  @Input() icandelete: boolean = false;
 
   @Input() max: number = 100;
   @Input() url: string;
@@ -256,9 +257,9 @@ export class ImageUploadComponent {
     if(typeof this.uploaded !== 'undefined')
     if(this.uploaded.length > 0)
     for(var i=0; i<this.uploaded.length;i++) {
-      this.imageService.convertFileToDataURLviaFileReader(this.uploaded[i], this.headers).subscribe(
+      this.imageService.convertFileToDataURLviaFileReader(this.uploaded[i]['imageUrl'], this.uploaded[i]['id'], this.headers).subscribe(
         response => {
-          let fileHolder: FileHolder = new FileHolder( response, new File([response], 'file_'+i+'.jpg') );
+          let fileHolder: FileHolder = new FileHolder( response.image, new File([response.image], 'file.jpg'), response.id );
           this.files.push( fileHolder );
           this.max--;
         }
@@ -325,11 +326,13 @@ export class ImageUploadComponent {
   }
 
   private deleteFile(file: FileHolder): void {
-    let index = this.files.indexOf(file);
-    this.files.splice(index, 1);
-    this.fileCounter--;
-
     this.onRemove.emit(file);
+    // от коллбека пришел тру -> значит можно убирать иконку
+    if(this.icandelete) {
+      let index = this.files.indexOf(file);
+      this.files.splice(index, 1);
+      this.fileCounter--;
+    }
   }
 
   fileOver(isOver) {
