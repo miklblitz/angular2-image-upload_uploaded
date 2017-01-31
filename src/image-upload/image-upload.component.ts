@@ -1,5 +1,6 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {ImageService, Header} from "../image.service";
+import {Observable} from 'rxjs/Rx';
 
 class FileHolder {
   public serverResponse: any;
@@ -40,7 +41,7 @@ class FileHolder {
       <div *ngIf="file.pending" class="loading-overlay">
         <div class="spinningCircle"></div>
       </div>
-      <div *ngIf="!file.pending&&file.id" class="x-mark" (click)="deleteFile(file)">
+      <div *ngIf="!file.pending" class="x-mark" (click)="deleteFile(file)">
         <span class="close"></span>
       </div>
     </div>
@@ -298,42 +299,51 @@ export class ImageUploadComponent {
 
         this.uploadSingleFile(fileHolder);
 
+        this.uploadSingleFile(fileHolder).subscribe(data=>{
+          if(data.result==='ok') {
+            fileHolder.id = data.response.id;
+          }
+        });
+
         this.files.push(fileHolder);
 
       }, false);
-
 
       reader.readAsDataURL(file);
     }
   }
 
   private uploadSingleFile(fileHolder: FileHolder) {
-    if (this.url) {
-      this.pendingFilesCounter++;
-      fileHolder.pending = true;
-
-      this.imageService.postImage(fileHolder.file, this.headers).subscribe(response => {
-        fileHolder.serverResponse = response;
+    return Observable.create(observer => {
+      if (this.url) {
+        this.pendingFilesCounter++;
+        fileHolder.pending = true;
+  
+        this.imageService.postImage(fileHolder.file, this.headers).subscribe(response => {
+          fileHolder.serverResponse = response;
+          this.onFileUploadFinish.emit(fileHolder);
+          fileHolder.pending = false;
+          if (--this.pendingFilesCounter == 0) {
+            this.isPending.emit(false);
+          }
+          observer.next({'result': 'ok', 'response':JSON.parse(response)});observer.complete();
+        });
+  
+      } else {
         this.onFileUploadFinish.emit(fileHolder);
-        fileHolder.pending = false;
-        if (--this.pendingFilesCounter == 0) {
-          this.isPending.emit(false);
-        }
-      });
-
-    } else {
-      this.onFileUploadFinish.emit(fileHolder);
-    }
+        observer.next({'result': 'error'});observer.complete();
+      }
+    });
   }
 
   private deleteFile(file: FileHolder): void {
     this.onRemove.emit(file);
     // от коллбека пришел тру -> значит можно убирать иконку
-    if(this.icandelete) {
+    // if(this.icandelete) {
       let index = this.files.indexOf(file);
       this.files.splice(index, 1);
       this.fileCounter--;
-    }
+    // }
   }
 
   fileOver(isOver) {
