@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable, EventEmitter} from "@angular/core";
 import {Observable} from "rxjs/Observable";
 
 export interface Header {
@@ -13,6 +13,8 @@ export class ImageService {
   public setUrl(url: string) {
     this.url = url;
   }
+
+  deleteEmit: EventEmitter<number> = new EventEmitter();
 
   public postImage(image: File, headers?: Header[]) {
     this.checkUrl();
@@ -66,6 +68,7 @@ export class ImageService {
         xhr.send();
      });
   }
+  
 
   private checkUrl() {
     if (!this.url) {

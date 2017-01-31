@@ -9,6 +9,7 @@ class FileHolder {
 
 @Component({
   selector: 'image-upload',
+  providers:[ImageService],
   template: `
 <div class="image-upload"
      fileDrop
